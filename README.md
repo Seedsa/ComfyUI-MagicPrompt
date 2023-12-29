@@ -1,5 +1,9 @@
-# ComfyUI Prompt Expansion
+# ComfyUI Magic Prompt
+
+Forked From [ComfyUI Prompt Expansion](https://github.com/meap158/ComfyUI-Prompt-Expansion)
+
 ### Dynamic prompt expansion, powered by GPT-2 locally on your device.
+
 The custom node will analyze your Positive prompt and Seed and incorporate additional keywords, which will likely improve your resulting image.
 
 For example, (from the workflow image below):
@@ -13,12 +17,15 @@ Based on my testing, it's evident that incorporating additional keywords generat
 Many thanks to the authors of the Fooocus project for generously providing most of the code.
 
 ## Installation
+
 - To install this custom node for ComfyUI, clone the repository using Git or download it, and then extract the the files to: ComfyUI\custom_nodes\ComfyUI-Prompt-Expansion:
+
 ```
-https://github.com/meap158/ComfyUI-Prompt-Expansion.git
+https://github.com/Seedsa/ComfyUI-MagicPrompt.git
 ```
 
 ## Usage
+
 To use this custom node (located within the 'utils' submenu), simply connect your positive prompt to it, which will then output the joined prompt.
 
 You can also load the example workflow by dragging the workflow file (workflow_example.json or workflow_example.png) onto ComfyUI.
@@ -33,7 +40,9 @@ You can also load the example workflow by dragging the workflow file (workflow_e
 - log_prompt: Whether to log the Prompt Expansion suffix and the final prompt to the console.
 
 ## Note
+
 Upon the first launch, the custom node will automatically download the model file (343MB) from the following link:
+
 ```
 https://huggingface.co/lllyasviel/misc/resolve/main/fooocus_expansion.bin
 ```
