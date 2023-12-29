@@ -38,25 +38,26 @@ def safe_str(x):
 
 
 class FooocusExpansion:
+    tokenizer = None
+    model = None
+
     def __init__(self):
-        self.tokenizer = AutoTokenizer.from_pretrained(fooocus_expansion_path)
-        self.model = AutoModelForCausalLM.from_pretrained(
-            fooocus_expansion_path)
-        # self.model.eval()
-
-        load_device = model_management.text_encoder_device()
-
-        if 'mps' in load_device.type:
-            load_device = torch.device('cpu')
-
-        if 'cpu' not in load_device.type and model_management.should_use_fp16():
-            self.model.half()
-
-        offload_device = model_management.text_encoder_offload_device()
+        self.load_model_and_tokenizer(fooocus_expansion_path)
+        self.offload_device = model_management.text_encoder_offload_device()
         self.patcher = ModelPatcher(
-            self.model, load_device=load_device, offload_device=offload_device)
+            self.model, load_device=self.model.device, offload_device=self.offload_device)
 
-        # print(f'Fooocus Expansion engine loaded for {load_device}.')
+    @classmethod
+    def load_model_and_tokenizer(cls, model_path):
+        if cls.tokenizer is None or cls.model is None:
+            cls.tokenizer = AutoTokenizer.from_pretrained(model_path)
+            cls.model = AutoModelForCausalLM.from_pretrained(model_path)
+            load_device = model_management.text_encoder_device()
+            if 'mps' in load_device.type:
+                load_device = torch.device('cpu')
+            if 'cpu' not in load_device.type and model_management.should_use_fp16():
+                cls.model.half()
+            cls.model.to(load_device)
 
     def __call__(self, prompt, seed):
         model_management.load_model_gpu(self.patcher)
@@ -142,7 +143,7 @@ class PromptExpansion:
 
         if log_prompt == "Yes":
             print(f"[Prompt Expansion] New suffix: {expansion_text}")
-            print(f"Final prompt: {final_prompt}")
+            print(f"[Final prompt]: {final_prompt}")
 
         return final_prompt, seed
 
