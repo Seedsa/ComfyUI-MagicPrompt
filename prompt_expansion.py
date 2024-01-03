@@ -55,8 +55,6 @@ class FooocusExpansion:
             load_device = model_management.text_encoder_device()
             if 'mps' in load_device.type:
                 load_device = torch.device('cpu')
-            if 'cpu' not in load_device.type and model_management.should_use_fp16():
-                cls.model.half()
             cls.model.to(load_device)
 
     def __call__(self, prompt, seed):
